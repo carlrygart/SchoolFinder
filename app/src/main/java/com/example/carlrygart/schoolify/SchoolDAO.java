@@ -110,7 +110,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             int id = object.getInt("id");
             String name = object.getString("name");
             if (name.contains("Malmö")) {
-                if (limit == 5) return listOfSchools;
+                if (limit == 3) return listOfSchools;
                 School school = getSchoolSpecifications(id);
                 listOfSchools.add(school);
                 limit++;
