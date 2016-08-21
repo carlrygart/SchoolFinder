@@ -12,9 +12,10 @@ public class School {
     private String webSite;
     private String phone;
     private String email;
+    private String facebook;
     private List<String> programs;
 
-    public School(int id, String name, String address, String postalCode, String city, String webSite, String phone, String email, List<String> programs) {
+    public School(int id, String name, String address, String postalCode, String city, String webSite, String phone, String email, String facebook, List<String> programs) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -23,6 +24,7 @@ public class School {
         this.webSite = webSite;
         this.phone = phone;
         this.email = email;
+        this.facebook = facebook;
         this.programs = programs;
     }
 
@@ -88,6 +90,14 @@ public class School {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
     }
 
     public List<String> getPrograms() {

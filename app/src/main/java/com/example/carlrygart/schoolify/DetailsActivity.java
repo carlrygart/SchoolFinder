@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,7 +13,8 @@ import android.widget.TextView;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    TextView schoolName;
+    TextView schoolAddress;
+    TextView schoolFacebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +34,22 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        schoolName = (TextView) findViewById(R.id.school_name);
+        schoolAddress = (TextView) findViewById(R.id.school_address);
+        schoolFacebook = (TextView) findViewById(R.id.school_facebook);
+
         School school = Schoolify.getSchoolByName(intent.getStringExtra("school_name"));
-        schoolName.setText(school.getAddress());
+        schoolAddress.setText(school.getAddress());
+        schoolFacebook.setText(school.getFacebook());
         setTitle(school.getName());
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 }

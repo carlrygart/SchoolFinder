@@ -200,11 +200,12 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
         String phone = resultObject.getString("phone");
         String email = resultObject.getString("email");
         String website = resultObject.getString("website");
+        String facebook = (resultObject.getString("socialMediaType").equals("facebook")) ? resultObject.getString("socialMediaLink") : null;
         List<String> programs = new ArrayList<>();
         for (int i = 0; i < programsArray.length(); ++i) {
             JSONObject object = programsArray.getJSONObject(i);
             programs.add(object.getString("name"));
         }
-        return new School(id, name, address, postalCode, city, phone, email, website, programs);
+        return new School(id, name, address, postalCode, city, phone, email, website, facebook, programs);
     }
 }
