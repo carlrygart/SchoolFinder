@@ -22,7 +22,7 @@ public class LocationDAO extends AsyncTask<String, Void, double[]> {
 
     @Override
     protected double[] doInBackground(String... strings) {
-//        Log.d(LOG_TAG,"Must be concat"+strings[0]);
+        Log.d(LOG_TAG, strings[0]);
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String JsonStr = null;

@@ -4,15 +4,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +89,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             }
         }
         try {
-            Log.d(LOG_TAG, "Ready to parse!");
+            //Log.d(LOG_TAG, "Ready to parse!");
             return getSchoolDataFromJson(JsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -170,7 +174,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             }
         }
         try {
-            Log.d(LOG_TAG, "Ready to parse!");
+            //Log.d(LOG_TAG, "Ready to parse!");
             return getSchoolSpecFromJson(JsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -201,11 +205,114 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
         String email = resultObject.getString("email");
         String website = resultObject.getString("website");
         String facebook = (resultObject.getString("socialMediaType").equals("facebook")) ? resultObject.getString("socialMediaLink") : null;
+        LatLng location = getLatLngFromAddress(address + ", " + postalCode);
         List<String> programs = new ArrayList<>();
         for (int i = 0; i < programsArray.length(); ++i) {
             JSONObject object = programsArray.getJSONObject(i);
             programs.add(object.getString("name"));
         }
-        return new School(id, name, address, postalCode, city, phone, email, website, facebook, programs);
+        return new School(id, name, address, postalCode, city, phone, email, website, facebook, location, programs);
     }
+
+    public LatLng getLatLngFromAddress(String address) {
+        final String BASE_ADDR = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
+        final String ADDRESS_PARAM = "query";
+        final String KEY_PARAM = "key";
+        final String KEY_VALUE = "AIzaSyAZSKPTTrRyl7NT7HUsQcMYb5AzTC-Q-h4";
+        //Log.d(LOG_TAG, address);
+        Uri builtUri = Uri.parse(BASE_ADDR).buildUpon()
+                .appendQueryParameter(ADDRESS_PARAM, address)
+                .appendQueryParameter(KEY_PARAM, KEY_VALUE)
+                .build();
+        //Log.d(LOG_TAG,builtUri.toString());
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+            //Log.d("TVA2", "tom");
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
+        }
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            //Log.d("TRE3", urlConnection.toString());
+
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            //Log.d("FYR4", inputStream.toString());
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                // Nothing to do.
+                return null;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                // But it does make debugging a *lot* easier if you print out the completed
+                // buffer for debugging.
+                buffer.append(line + "\n");
+            }
+
+            if (buffer.length() == 0) {
+                // Stream was empty.  No point in parsing.
+                return null;
+            }
+            JsonStr = buffer.toString();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error ", e);
+            // If the code didn't successfully get the weather data, there's no point in attemping
+            // to parse it.
+            return null;
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (final IOException e) {
+                    Log.e(LOG_TAG, "Error closing stream", e);
+                }
+            }
+        }
+        try {
+//            Log.d(LOG_TAG,"Ready to parse!");
+            return parseStream(JsonStr);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
+
+        // This will only happen if there was an error getting or parsing the forecast.
+        return null;
+    }
+
+    private LatLng parseStream(String JsonStr) throws JSONException {
+        //Log.d(LOG_TAG, JsonStr);
+        // These are the names of the JSON objects that need to be extracted.
+        final String OWM_RESULTS = "results";
+        final String OWM_GEOMETRY = "geometry";
+        final String OWM_LOCATION = "location";
+        final String OWM_STATUS = "status";
+
+        JSONObject locationJson = new JSONObject(JsonStr);
+        if (locationJson.getString("status").equals("OK")) {
+            JSONArray locationArray = locationJson.getJSONArray(OWM_RESULTS);
+
+            double[] result = new double[2];
+            JSONObject Object = locationArray.getJSONObject(0);
+            JSONObject geometry = Object.getJSONObject(OWM_GEOMETRY);
+            JSONObject locationObject = geometry.getJSONObject(OWM_LOCATION);
+            result[0] = locationObject.getDouble("lat");
+            result[1] = locationObject.getDouble("lng");
+            Log.d(LOG_TAG, "Location is " + result[0] + ", " + result[1]);
+            Log.d(LOG_TAG, "-----------------------");
+            return new LatLng(result[0], result[1]);
+        } else {
+            Log.d(LOG_TAG, "In else:Status is " + locationJson.getString("status"));
+            return null;
+        }
+    }
+
 }

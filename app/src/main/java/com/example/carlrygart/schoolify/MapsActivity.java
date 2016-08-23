@@ -22,9 +22,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private final static String LOG_TAG = "MAPS";
     private GoogleMap mMap;
-    private LatLng schoolCoordinates;
+//    private LatLng schoolCoordinates;
     private School school;
-    private LocationDAO locationDAO;
+//    private LocationDAO locationDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +37,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Intent intent = getIntent();
         school = Schoolify.getSchoolByName(intent.getStringExtra("school_name"));
-        locationDAO = new LocationDAO();
-        locationDAO.execute(school.getAddress() + ", " + school.getPostalCode());
-        try {
-            double[] locationData = locationDAO.get();
-            if (locationData!=null) {
-                schoolCoordinates = new LatLng(locationData[0], locationData[1]);
-            } else {
-                schoolCoordinates = new LatLng(0, 0);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+//        locationDAO = new LocationDAO();
+//        locationDAO.execute(school.getAddress() + ", " + school.getPostalCode());
+//        try {
+//            double[] locationData = locationDAO.get();
+//            if (locationData!=null) {
+//                schoolCoordinates = new LatLng(locationData[0], locationData[1]);
+//            } else {
+//                schoolCoordinates = new LatLng(0, 0);
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -72,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-        mMap.addMarker(new MarkerOptions().position(schoolCoordinates).title(school.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(schoolCoordinates, 16));
+        mMap.addMarker(new MarkerOptions().position(school.getLocation()).title(school.getName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(school.getLocation(), 16));
     }
 }

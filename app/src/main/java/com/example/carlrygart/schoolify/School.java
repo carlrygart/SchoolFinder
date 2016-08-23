@@ -1,5 +1,7 @@
 package com.example.carlrygart.schoolify;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 public class School {
@@ -13,9 +15,10 @@ public class School {
     private String phone;
     private String email;
     private String facebook;
+    private LatLng location;
     private List<String> programs;
 
-    public School(int id, String name, String address, String postalCode, String city, String webSite, String phone, String email, String facebook, List<String> programs) {
+    public School(int id, String name, String address, String postalCode, String city, String webSite, String phone, String email, String facebook, LatLng location, List<String> programs) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -25,6 +28,7 @@ public class School {
         this.phone = phone;
         this.email = email;
         this.facebook = facebook;
+        this.location = location;
         this.programs = programs;
     }
 
@@ -98,6 +102,14 @@ public class School {
 
     public void setFacebook(String facebook) {
         this.facebook = facebook;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 
     public List<String> getPrograms() {

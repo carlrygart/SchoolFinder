@@ -12,7 +12,7 @@ public class Schoolify {
 
     private SchoolifyDbHelper mDbHelper;
     private SchoolDAO schoolDAO;
-    private static ArrayList<School> schools;
+    public static ArrayList<School> schools;
 
     public Schoolify() {
         mDbHelper = new SchoolifyDbHelper(MainActivity.appContext);
@@ -32,7 +32,7 @@ public class Schoolify {
                 e.printStackTrace();
             }
         } else {
-
+            Log.d(LOG_TAG, "Schools already filled!");
         }
     }
 
@@ -42,6 +42,7 @@ public class Schoolify {
 
     public List<String> getSchoolStringArray() {
         List<String> list = new ArrayList<>();
+        if (schools == null) return list;
         for (School school: schools) {
             list.add(school.getName());
         }

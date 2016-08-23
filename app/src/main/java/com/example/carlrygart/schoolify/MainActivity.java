@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
     private Schoolify schoolify;
 
     private Spinner spinner;
-    private Button submit_spinner_button;
+    private Button findSchoolsButton, submitSpinnerButton;
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -54,14 +54,23 @@ public class MainActivity extends AppCompatActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        submit_spinner_button = (Button) findViewById(R.id.submit_spinner);
-        submit_spinner_button.setOnClickListener(new View.OnClickListener() {
+        submitSpinnerButton = (Button) findViewById(R.id.submit_spinner);
+        submitSpinnerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 String spinnerValue = spinner.getSelectedItem().toString();
                 intent.putExtra("school_name", spinnerValue);
                 //Log.d("Int", key_string + " and Val: " + playerScores.get(key_int));
+                startActivity(intent);
+            }
+        });
+
+        findSchoolsButton = (Button) findViewById(R.id.find_schools_button);
+        findSchoolsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SchoolListActivity.class);
                 startActivity(intent);
             }
         });
