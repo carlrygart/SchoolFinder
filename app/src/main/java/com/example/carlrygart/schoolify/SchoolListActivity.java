@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class SchoolListActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class SchoolListActivity extends AppCompatActivity implements OnMapReadyCallback, FilterDialogFragment.FilterDialogListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -54,6 +55,9 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
     private static final String LOG_TAG = "SCHOOLLIST";
     private boolean mTwoPane;
     private GoogleMap mMap;
+    private RecyclerView recyclerView;
+    private int chosenDistance;
+    private List<String> selectedPrograms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +68,19 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        //selectedPrograms = Schoolify.availablePrograms;
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        View recyclerView = findViewById(R.id.school_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.school_list);
+        //assert recyclerView != null;
+        //setupRecyclerView(recyclerView);
+        List<String> tempProg = new ArrayList<>(Schoolify.availablePrograms);
+        onFinishDialog(tempProg, 20);
 
         if (findViewById(R.id.school_detail_container) != null) {
             // The detail container view will be present only in the
@@ -90,7 +98,7 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = new FilterDialogFragment();
+                DialogFragment newFragment = FilterDialogFragment.newInstance(selectedPrograms, chosenDistance);
                 newFragment.show(getFragmentManager(), "dialog");
             }
         });
@@ -131,6 +139,17 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.schools));
     }
 
+    @Override
+    public void onFinishDialog(List<String> selectedPrograms, int chosenDistance) {
+        this.selectedPrograms = selectedPrograms;
+        this.chosenDistance = chosenDistance;
+        List<School> schoolsToView = new ArrayList<>();
+        for (School school: Schoolify.schools) {
+            if (school.hasOneOfPrograms(selectedPrograms) && (school.isWithinDistance(chosenDistance) || chosenDistance == 20)) schoolsToView.add(school);
+        }
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(schoolsToView));
+    }
+
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
@@ -145,20 +164,19 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.school_list_content, parent, false);
+            //getWindow().setTitle("Skolväljaren");
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            //holder.mIdView.setText(mValues.get(position).id);
             holder.mSchoolNameView.setText(mValues.get(position).getName());
 
             Location userLoc = MainActivity.mLastLocation;
             LatLng schoolLoc = holder.mItem.getLocation();
-            double distance = calcDistance(userLoc.getLatitude(), userLoc.getLongitude(), schoolLoc.latitude, schoolLoc.longitude, "K");
+            double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), schoolLoc.latitude, schoolLoc.longitude, "K");
             String distanceText = String.format("%.2f km från din position", distance);
-            //Log.d("DISTANCETEXT", distanceText);
             holder.mDistance.setText(distanceText);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +209,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
                         Context context = v.getContext();
                         Intent intent = new Intent(context, SchoolDetailActivity.class);
                         intent.putExtra(SchoolDetailFragment.ARG_ITEM_ID, holder.mItem.getName());
-
                         context.startActivity(intent);
                     }
                 }
@@ -225,27 +242,5 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
                 return super.toString() + " '" + mSchoolNameView.getText() + "'";
             }
         }
-    }
-
-    private double calcDistance(double lat1, double lon1, double lat2, double lon2, String unit) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        if (unit == "K") {
-            dist = dist * 1.609344;
-        } else if (unit == "N") {
-            dist = dist * 0.8684;
-        }
-        return (dist);
-    }
-
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
     }
 }

@@ -43,7 +43,6 @@
             android:id="@+id/max_distance_seek_bar"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:progress="10"
             android:max="20" />
 
         <TextView

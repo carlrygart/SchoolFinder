@@ -1,5 +1,8 @@
 package com.example.carlrygart.schoolify;
 
+import android.location.Location;
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -118,5 +121,21 @@ public class School {
 
     public void setPrograms(List<String> programs) {
         this.programs = programs;
+    }
+
+    public boolean hasOneOfPrograms(List<String> chosenPrograms) {
+        for (String pro: chosenPrograms) {
+            if (programs.contains(pro)) return true;
+        }
+        return false;
+    }
+
+    public boolean isWithinDistance(int acceptableDistance) {
+        Location userLoc = MainActivity.mLastLocation;
+        double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), location.latitude, location.longitude, "K");
+        //Log.d("ACCDISTANCE", String.valueOf(acceptableDistance));
+        //Log.d("ACTUALDISTANCE", String.valueOf(distance));
+        if (distance < acceptableDistance) return true;
+        return false;
     }
 }

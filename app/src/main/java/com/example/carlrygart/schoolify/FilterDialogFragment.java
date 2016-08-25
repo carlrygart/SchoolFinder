@@ -35,6 +35,23 @@ public class FilterDialogFragment extends DialogFragment {
     protected List<String> selectedPrograms;
     protected int chosenDistance;
 
+    public interface FilterDialogListener {
+        void onFinishDialog(List<String> selectedPrograms, int chosenDistance);
+    }
+
+    public static FilterDialogFragment newInstance(List<String> selectedPrograms, int chosenDistance) {
+        FilterDialogFragment frag = new FilterDialogFragment();
+        Bundle args = new Bundle();
+//        for (int i = 0; i < selectedPrograms.size(); i++) {
+//            args.putString("program" + i, selectedPrograms.get(i));
+//        }
+//        args.putInt("programListSize", selectedPrograms.size());
+        args.putStringArrayList("selectedPrograms", (ArrayList<String>) selectedPrograms);
+        args.putInt("chosenDistance", chosenDistance);
+        frag.setArguments(args);
+        return frag;
+    }
+
     /** The system calls this to get the DialogFragment's layout, regardless
      of whether it's being displayed as a dialog or an embedded fragment. */
     @Override
@@ -43,17 +60,23 @@ public class FilterDialogFragment extends DialogFragment {
         // Inflate the layout to use as dialog or embedded fragment
         final View view = inflater.inflate(R.layout.filter_dialog_content, container, false);
 
-        selectedPrograms = new ArrayList<>();
-        chosenDistance = 0;
+        selectedPrograms = getArguments().getStringArrayList("selectedPrograms");
+        Log.d("INSelectedPROG", String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
+        chosenDistance = getArguments().getInt("chosenDistance");
 
+        final TextView maxDistanceValue = (TextView) view.findViewById(R.id.max_distance_value);
+        String distText = chosenDistance + " km";
+        if (chosenDistance == 20) distText = ">20 km";
+        maxDistanceValue.setText(distText);
         SeekBar maxDistance = (SeekBar) view.findViewById(R.id.max_distance_seek_bar);
-        maxDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        maxDistance.setProgress(chosenDistance);
 
-            TextView maxDistanceValue = (TextView) view.findViewById(R.id.max_distance_value);
+        maxDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 chosenDistance = i;
                 String text = i + " km";
+                if (i == 20) text = ">20 km";
                 maxDistanceValue.setText(text);
                 Log.d("CHOSENDIST", String.valueOf(chosenDistance));
             }
@@ -69,19 +92,15 @@ public class FilterDialogFragment extends DialogFragment {
             }
         });
 
-        View recyclerView = view.findViewById(R.id.program_list);
-        assert recyclerView != null;
-
-        if (recyclerView != null) {
-            setupRecyclerView((RecyclerView) recyclerView);
-        } else {
-            Log.d("RECVIEW", "Rec view is null");
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.program_list);
+        setupRecyclerView(recyclerView);
 
         Button okButton = (Button) view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FilterDialogListener activity = (FilterDialogListener) getActivity();
+                activity.onFinishDialog(selectedPrograms, chosenDistance);
                 dismiss();
             }
         });
@@ -112,6 +131,7 @@ public class FilterDialogFragment extends DialogFragment {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.availablePrograms));
+        Log.d("1AVAILPROG", Schoolify.availablePrograms.toString());
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -120,7 +140,6 @@ public class FilterDialogFragment extends DialogFragment {
         private final List<String> mValues;
 
         public SimpleItemRecyclerViewAdapter(List<String> items) {
-            //Collections.sort(items, (String o1, String o2) -> o1.compareTo(o2));
             mValues = items;
         }
 
@@ -144,24 +163,33 @@ public class FilterDialogFragment extends DialogFragment {
                     } else {
                         holder.mProgramNameView.setChecked(true);
                     }
-                    //int bgColor = ((ColorDrawable) view.getBackground()).getColor();
-//                    if (selectedView != null) selectedView.setBackgroundColor(Color.WHITE);
-//                    view.setBackgroundColor(Color.GRAY);
-//                    selectedView = view;
                 }
             });
 
             holder.mProgramNameView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (holder.mProgramNameView.isChecked()) {
+                    if (b && !selectedPrograms.contains(holder.mItem)) {
                         selectedPrograms.add(holder.mItem);
-                    } else {
-                        selectedPrograms.remove(holder.mItem);
+                        Log.d("ADDED:", holder.mItem);
                     }
-                    Log.d("SELECTPRO", selectedPrograms.toString());
+                    if (!b) {
+                        selectedPrograms.remove(holder.mItem);
+                        Log.d("REMOVED:", holder.mItem);
+                    }
+                    Log.d("SELECTPROG", String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
+                    Log.d("--------", "--------------");
+                    //Log.d("2AVAILPROG", Schoolify.availablePrograms.toString());
                 }
             });
+
+            if (selectedPrograms.contains(holder.mItem)) {
+                holder.mProgramNameView.setChecked(true);
+                Log.d("CHECKED!", holder.mItem);
+            } else {
+                holder.mProgramNameView.setChecked(false);
+                Log.d("NOT CHECKED!", holder.mItem);
+            }
         }
 
         @Override
