@@ -114,7 +114,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             int id = object.getInt("id");
             String name = object.getString("name");
             if (name.contains("Malmö")) {
-                if (limit == 3) return listOfSchools;
+                if (limit == 6) return listOfSchools;
                 School school = getSchoolSpecifications(id);
                 listOfSchools.add(school);
                 limit++;
@@ -205,13 +205,14 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
         String email = resultObject.getString("email");
         String website = resultObject.getString("website");
         String facebook = (resultObject.getString("socialMediaType").equals("facebook")) ? resultObject.getString("socialMediaLink") : null;
-        LatLng location = getLatLngFromAddress(address + ", " + postalCode);
-        List<String> programs = new ArrayList<>();
+        LatLng location = new LatLng(55.6, 13.0); //getLatLngFromAddress(address + ", " + postalCode);
+        List<String> offeredPrograms = new ArrayList<>();
         for (int i = 0; i < programsArray.length(); ++i) {
-            JSONObject object = programsArray.getJSONObject(i);
-            programs.add(object.getString("name"));
+            String program = programsArray.getJSONObject(i).getString("name");
+            if (!offeredPrograms.contains(program)) offeredPrograms.add(program);
+            if (!Schoolify.availablePrograms.contains(program)) Schoolify.availablePrograms.add(program);
         }
-        return new School(id, name, address, postalCode, city, phone, email, website, facebook, location, programs);
+        return new School(id, name, address, postalCode, city, phone, email, website, facebook, location, offeredPrograms);
     }
 
     public LatLng getLatLngFromAddress(String address) {

@@ -3,6 +3,8 @@ package com.example.carlrygart.schoolify;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -12,11 +14,13 @@ public class Schoolify {
 
     private SchoolifyDbHelper mDbHelper;
     private SchoolDAO schoolDAO;
-    public static ArrayList<School> schools;
+    public static List<School> schools;
+    public static List<String> availablePrograms;
 
     public Schoolify() {
         mDbHelper = new SchoolifyDbHelper(MainActivity.appContext);
         schoolDAO = new SchoolDAO();
+        availablePrograms = new ArrayList<>();
         fetchSchools();
     }
 
@@ -25,7 +29,17 @@ public class Schoolify {
             schoolDAO.execute();
             try {
                 schools = schoolDAO.get();
-                Log.d(LOG_TAG, "List of Schools got!");
+                Log.d(LOG_TAG, "Got list of Schools!");
+
+//                Comparator<String> byName = new Comparator<String>() {
+//                    @Override
+//                    public int compare(String o1, String o2) {
+//                        return o1.compareTo(o2);
+//                    }
+//                };
+                Collections.sort(availablePrograms);
+                Log.d("PROGRAM", availablePrograms.toString());
+                Log.d("PROGRAM", String.valueOf(availablePrograms.size()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -36,7 +50,7 @@ public class Schoolify {
         }
     }
 
-    public ArrayList<School> getSchools() {
+    public List<School> getSchools() {
         return schools;
     }
 

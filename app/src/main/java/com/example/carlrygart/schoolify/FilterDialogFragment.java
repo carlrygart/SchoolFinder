@@ -1,0 +1,189 @@
+package com.example.carlrygart.schoolify;
+
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.text.Text;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class FilterDialogFragment extends DialogFragment {
+
+    protected List<String> selectedPrograms;
+    protected int chosenDistance;
+
+    /** The system calls this to get the DialogFragment's layout, regardless
+     of whether it's being displayed as a dialog or an embedded fragment. */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout to use as dialog or embedded fragment
+        final View view = inflater.inflate(R.layout.filter_dialog_content, container, false);
+
+        selectedPrograms = new ArrayList<>();
+        chosenDistance = 0;
+
+        SeekBar maxDistance = (SeekBar) view.findViewById(R.id.max_distance_seek_bar);
+        maxDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            TextView maxDistanceValue = (TextView) view.findViewById(R.id.max_distance_value);
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                chosenDistance = i;
+                String text = i + " km";
+                maxDistanceValue.setText(text);
+                Log.d("CHOSENDIST", String.valueOf(chosenDistance));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        View recyclerView = view.findViewById(R.id.program_list);
+        assert recyclerView != null;
+
+        if (recyclerView != null) {
+            setupRecyclerView((RecyclerView) recyclerView);
+        } else {
+            Log.d("RECVIEW", "Rec view is null");
+        }
+
+        Button okButton = (Button) view.findViewById(R.id.ok_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+        Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+        return view;
+    }
+
+    /** The system calls this only when creating the layout in a dialog. */
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // The only reason you might override this method when using onCreateView() is
+        // to modify any dialog characteristics. For example, the dialog includes a
+        // title by default, but your custom layout might not need it. So here you can
+        // remove the dialog title, but you must call the superclass to get the Dialog.
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setTitle("Filter");
+        return dialog;
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.availablePrograms));
+    }
+
+    public class SimpleItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+        private final List<String> mValues;
+
+        public SimpleItemRecyclerViewAdapter(List<String> items) {
+            //Collections.sort(items, (String o1, String o2) -> o1.compareTo(o2));
+            mValues = items;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.program_list_content, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mItem = mValues.get(position);
+            holder.mProgramNameView.setText(holder.mItem);
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (holder.mProgramNameView.isChecked()) {
+                        holder.mProgramNameView.setChecked(false);
+                    } else {
+                        holder.mProgramNameView.setChecked(true);
+                    }
+                    //int bgColor = ((ColorDrawable) view.getBackground()).getColor();
+//                    if (selectedView != null) selectedView.setBackgroundColor(Color.WHITE);
+//                    view.setBackgroundColor(Color.GRAY);
+//                    selectedView = view;
+                }
+            });
+
+            holder.mProgramNameView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (holder.mProgramNameView.isChecked()) {
+                        selectedPrograms.add(holder.mItem);
+                    } else {
+                        selectedPrograms.remove(holder.mItem);
+                    }
+                    Log.d("SELECTPRO", selectedPrograms.toString());
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public final View mView;
+            public final CheckBox mProgramNameView;
+            public String mItem;
+
+            public ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mProgramNameView = (CheckBox) view.findViewById(R.id.program_name);
+            }
+
+            @Override
+            public String toString() {
+                return super.toString() + " '" + mProgramNameView.getText() + "'";
+            }
+        }
+    }
+}
