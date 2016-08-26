@@ -98,7 +98,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             int id = object.getInt("id");
             String name = object.getString("name");
             if (name.contains("Malmö")) {
-                if (limit == 6) return listOfSchools;
+                if (limit == 10) return listOfSchools;
                 School school = getSchoolSpecifications(id);
                 listOfSchools.add(school);
                 limit++;
@@ -211,7 +211,10 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             e1.printStackTrace();
         }
         try {
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection urlConnection = null;
+            if (url != null) {
+                urlConnection = (HttpURLConnection) url.openConnection();
+            }
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
@@ -281,7 +284,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             return new LatLng(result[0], result[1]);
         } else {
             Log.d(LOG_TAG, "In else: Status is " + locationJson.getString("status"));
-            return null;
+            return new LatLng(55.6, 13);
         }
     }
 }

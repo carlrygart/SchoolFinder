@@ -32,6 +32,8 @@ import java.util.List;
 
 public class FilterDialogFragment extends DialogFragment {
 
+    public static String LOG_TAG = "DIALOGFRAG";
+
     protected List<String> selectedPrograms;
     protected int chosenDistance;
 
@@ -42,10 +44,6 @@ public class FilterDialogFragment extends DialogFragment {
     public static FilterDialogFragment newInstance(List<String> selectedPrograms, int chosenDistance) {
         FilterDialogFragment frag = new FilterDialogFragment();
         Bundle args = new Bundle();
-//        for (int i = 0; i < selectedPrograms.size(); i++) {
-//            args.putString("program" + i, selectedPrograms.get(i));
-//        }
-//        args.putInt("programListSize", selectedPrograms.size());
         args.putStringArrayList("selectedPrograms", (ArrayList<String>) selectedPrograms);
         args.putInt("chosenDistance", chosenDistance);
         frag.setArguments(args);
@@ -61,7 +59,7 @@ public class FilterDialogFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.filter_dialog_content, container, false);
 
         selectedPrograms = getArguments().getStringArrayList("selectedPrograms");
-        Log.d("INSelectedPROG", String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
+        Log.d(LOG_TAG, String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
         chosenDistance = getArguments().getInt("chosenDistance");
 
         final TextView maxDistanceValue = (TextView) view.findViewById(R.id.max_distance_value);
@@ -78,7 +76,7 @@ public class FilterDialogFragment extends DialogFragment {
                 String text = i + " km";
                 if (i == 20) text = ">20 km";
                 maxDistanceValue.setText(text);
-                Log.d("CHOSENDIST", String.valueOf(chosenDistance));
+                Log.d(LOG_TAG, "Chosen distance: " + String.valueOf(chosenDistance));
             }
 
             @Override
@@ -131,7 +129,6 @@ public class FilterDialogFragment extends DialogFragment {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.availablePrograms));
-        Log.d("1AVAILPROG", Schoolify.availablePrograms.toString());
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -177,18 +174,17 @@ public class FilterDialogFragment extends DialogFragment {
                         selectedPrograms.remove(holder.mItem);
                         Log.d("REMOVED:", holder.mItem);
                     }
-                    Log.d("SELECTPROG", String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
-                    Log.d("--------", "--------------");
-                    //Log.d("2AVAILPROG", Schoolify.availablePrograms.toString());
+                    Log.d(LOG_TAG, String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
+                    Log.d(LOG_TAG, "-------------------------");
                 }
             });
 
             if (selectedPrograms.contains(holder.mItem)) {
                 holder.mProgramNameView.setChecked(true);
-                Log.d("CHECKED!", holder.mItem);
+                Log.d(LOG_TAG, "Checked: " + holder.mItem);
             } else {
                 holder.mProgramNameView.setChecked(false);
-                Log.d("NOT CHECKED!", holder.mItem);
+                Log.d(LOG_TAG, "NOT Checked: " + holder.mItem);
             }
         }
 

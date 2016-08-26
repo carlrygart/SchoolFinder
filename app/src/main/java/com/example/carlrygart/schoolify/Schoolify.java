@@ -18,7 +18,6 @@ public class Schoolify {
 
     public Schoolify() {
         schoolDAO = new SchoolDAO();
-        availablePrograms = new ArrayList<>();
         fetchSchools();
     }
 
@@ -26,18 +25,12 @@ public class Schoolify {
         if (schools == null) {
             schoolDAO.execute();
             try {
+                availablePrograms = new ArrayList<>();
                 schools = schoolDAO.get();
                 Log.d(LOG_TAG, "Got list of Schools!");
-
-//                Comparator<String> byName = new Comparator<String>() {
-//                    @Override
-//                    public int compare(String o1, String o2) {
-//                        return o1.compareTo(o2);
-//                    }
-//                };
                 Collections.sort(availablePrograms);
-                Log.d("PROGRAM", availablePrograms.toString());
-                Log.d("PROGRAM", String.valueOf(availablePrograms.size()));
+                //Log.d("PROGRAM", availablePrograms.toString());
+                Log.d("PROGRAM", "Number of programs: " + String.valueOf(availablePrograms.size()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -45,6 +38,7 @@ public class Schoolify {
             }
         } else {
             Log.d(LOG_TAG, "Schools already filled!");
+            Log.d(LOG_TAG, schools.size() + "First obj: " + schools.get(0).getName());
         }
     }
 

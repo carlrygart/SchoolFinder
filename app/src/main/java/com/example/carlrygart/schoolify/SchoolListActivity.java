@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,8 +69,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        //selectedPrograms = Schoolify.availablePrograms;
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -77,8 +76,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.school_list);
-        //assert recyclerView != null;
-        //setupRecyclerView(recyclerView);
         List<String> tempProg = new ArrayList<>(Schoolify.availablePrograms);
         onFinishDialog(tempProg, 20);
 
@@ -118,23 +115,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(55.6, 13.0), 11));
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == android.R.id.home) {
-//            // This ID represents the Home or Up button. In the case of this
-//            // activity, the Up button is shown. Use NavUtils to allow users
-//            // to navigate up one level in the application structure. For
-//            // more details, see the Navigation pattern on Android Design:
-//            //
-//            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-//            //
-//            //navigateUpFromSameTask(this);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.schools));
     }
@@ -170,7 +150,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.school_list_content, parent, false);
-            //getWindow().setTitle("Skolväljaren");
             return new ViewHolder(view);
         }
 
@@ -228,7 +207,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            //public final TextView mIdView;
             public final TextView mSchoolNameView;
             public TextView mDistance;
             public final ImageView mInfoButton;
@@ -237,7 +215,6 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                //mIdView = (TextView) view.findViewById(R.id.id);
                 mSchoolNameView = (TextView) view.findViewById(R.id.school_name);
                 mDistance = (TextView) view.findViewById(R.id.distance_to_user);
                 mInfoButton = (ImageView) view.findViewById(R.id.info_button);

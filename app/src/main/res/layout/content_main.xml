@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.carlrygart.schoolify.MainActivity"
-    tools:showIn="@layout/app_bar_main"
+    tools:showIn="@layout/activity_main"
     android:background="@drawable/background"
     android:orientation="vertical"
     android:gravity="center_horizontal">
@@ -26,8 +26,6 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginTop="69dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:padding="@dimen/text_margin" />
 
     <TextView
@@ -38,16 +36,12 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:id="@+id/or_choose_from_list"
-        android:layout_below="@+id/find_schools_button"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="49dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_height="40dp">
 
         <Spinner
             android:layout_width="250dp"
@@ -64,7 +58,7 @@
             android:background="#236c99"
             android:textSize="16sp"
             android:textColor="#FFFFFF"
-            android:layout_marginLeft="3dp" />
+            android:layout_marginStart="3dp" />
     </LinearLayout>
 
 </LinearLayout>
