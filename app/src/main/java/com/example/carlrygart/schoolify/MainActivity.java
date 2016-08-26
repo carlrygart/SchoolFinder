@@ -1,6 +1,5 @@
 package com.example.carlrygart.schoolify;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +22,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+/**
+ * Main acitivty class that initate the whole application.
+ */
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         // Create an instance of the model Schoolify.
         schoolify = new Schoolify();
 
-        // Spinner stuff. Fetching the resources and find the array with choices. Creates the
+        // Spinner stuff. Fetching the array with schools. Creates the
         // spinner object and the adapter. Finally putting the adapter in the spinner object.
         spinner = (Spinner) findViewById(R.id.spinner);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schoolify.getSchoolStringArray());
@@ -82,8 +84,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-        Log.d(LOG_TAG, "TESTAR -----------------------------");
     }
 
     @Override

@@ -20,6 +20,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO for fetching all information regarding the schools.
+ */
 public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
     private String LOG_TAG = "SCHOOLDAO";
@@ -27,8 +30,14 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
     private BufferedReader reader = null;
     private String JsonStr = null;
 
+    // A parameter for limiting the data fetching.
     private int limit;
 
+    /**
+     * Asynchronous HTTP GET request for fetching the school data.
+     * @param params
+     * @return a list of schools
+     */
     protected ArrayList<School> doInBackground(Void... params) {
         try {
             final String BASE_ADDR = "http://api.skanegy.se/get/schools/";

@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Schoolify is the main model class i this application.
+ */
 public class Schoolify {
 
     final static String LOG_TAG = "SCHOOLIFY";
@@ -21,6 +24,9 @@ public class Schoolify {
         fetchSchools();
     }
 
+    /**
+     * Fetches the schools from the DAO. Sorts the avaliable programs list.
+     */
     public void fetchSchools() {
         if (schools == null) {
             schoolDAO.execute();
@@ -29,7 +35,6 @@ public class Schoolify {
                 schools = schoolDAO.get();
                 Log.d(LOG_TAG, "Got list of Schools!");
                 Collections.sort(availablePrograms);
-                //Log.d("PROGRAM", availablePrograms.toString());
                 Log.d("PROGRAM", "Number of programs: " + String.valueOf(availablePrograms.size()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -46,6 +51,10 @@ public class Schoolify {
         return schools;
     }
 
+    /**
+     * Extract all the school names from the school objects.
+     * @return list of all the school names
+     */
     public List<String> getSchoolStringArray() {
         List<String> list = new ArrayList<>();
         if (schools == null) return list;
@@ -55,6 +64,11 @@ public class Schoolify {
         return list;
     }
 
+    /**
+     * Extracts a specific school depending on it's name.
+     * @param name the schools name
+     * @return the school object
+     */
     public static School getSchoolByName(String name) {
         for (School school: schools) {
             if (school.getName().equals(name)) {
