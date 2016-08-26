@@ -31,15 +31,6 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".DetailsActivity"
-            android:label="@string/title_activity_details"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.carlrygart.schoolify.MainActivity" />
-        </activity>
-        <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity

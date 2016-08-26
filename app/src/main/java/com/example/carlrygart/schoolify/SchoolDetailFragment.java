@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.text.Text;
+
 /**
  * A fragment representing a single School detail screen.
  * This fragment is either contained in a {@link SchoolListActivity}
@@ -25,9 +27,14 @@ public class SchoolDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private TextView mSchoolAddress;
-    private TextView mSchoolFacebook;
     private School mSchool;
+    private TextView mSchoolTitle;
+    private TextView mSchoolPrograms;
+    private TextView mSchoolWebsite;
+    private TextView mSchoolPhone;
+    private TextView mSchoolEmail;
+    private TextView mSchoolFacebook;
+    private TextView mSchoolAddress;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -60,13 +67,27 @@ public class SchoolDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.school_detail, container, false);
-
+        mSchoolTitle = (TextView) rootView.findViewById(R.id.school_title);
+        mSchoolPrograms = (TextView) rootView.findViewById(R.id.school_programs);
+        mSchoolWebsite = (TextView) rootView.findViewById(R.id.school_website);
+        mSchoolPhone = (TextView) rootView.findViewById(R.id.school_phone);
+        mSchoolEmail = (TextView) rootView.findViewById(R.id.school_email);
         mSchoolAddress = (TextView) rootView.findViewById(R.id.school_address);
         mSchoolFacebook = (TextView) rootView.findViewById(R.id.school_facebook);
 
         // Show the dummy content as text in a TextView.
         if (mSchool != null) {
-            mSchoolAddress.setText(mSchool.getAddress());
+            mSchoolTitle.setText(mSchool.getName());
+            String programText = "";
+            for (String pro: mSchool.getPrograms()) {
+                programText += pro + "\n";
+            }
+            mSchoolPrograms.setText(programText);
+            mSchoolWebsite.setText(mSchool.getWebSite());
+            mSchoolPhone.setText(mSchool.getPhone());
+            mSchoolEmail.setText(mSchool.getEmail());
+            String addressText = mSchool.getAddress() +"\n"+ mSchool.getPostalCode() +" "+ mSchool.getCity();
+            mSchoolAddress.setText(addressText);
             mSchoolFacebook.setText(mSchool.getFacebook());
         }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,11 +12,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.carlrygart.schoolify.MainActivity"
     tools:showIn="@layout/app_bar_main"
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/find_schools_button"
         android:id="@+id/find_schools_button"
         android:background="#236c99"
@@ -24,7 +27,8 @@
         android:textSize="16sp"
         android:layout_marginTop="69dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/text_margin" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,25 +45,26 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
         <Spinner
             android:layout_width="250dp"
-            android:layout_height="40dp"
+            android:layout_height="fill_parent"
             android:id="@+id/spinner"
             android:spinnerMode="dropdown"
             android:background="#c8c8c8" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="fill_parent"
             android:text="@string/get_school"
             android:id="@+id/submit_spinner"
             android:background="#236c99"
             android:textSize="16sp"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="3dp" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

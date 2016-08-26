@@ -148,6 +148,12 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
             if (school.hasOneOfPrograms(selectedPrograms) && (school.isWithinDistance(chosenDistance) || chosenDistance == 20)) schoolsToView.add(school);
         }
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(schoolsToView));
+        if (mMap != null) {
+            mMap.clear();
+            for (School school: schoolsToView) {
+                mMap.addMarker(new MarkerOptions().position(school.getLocation()).title(school.getName()));
+            }
+        }
     }
 
     public class SimpleItemRecyclerViewAdapter

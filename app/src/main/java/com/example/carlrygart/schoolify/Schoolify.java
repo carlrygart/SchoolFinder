@@ -12,13 +12,11 @@ public class Schoolify {
 
     final static String LOG_TAG = "SCHOOLIFY";
 
-    private SchoolifyDbHelper mDbHelper;
     private SchoolDAO schoolDAO;
     public static List<School> schools;
     public static List<String> availablePrograms;
 
     public Schoolify() {
-        mDbHelper = new SchoolifyDbHelper(MainActivity.appContext);
         schoolDAO = new SchoolDAO();
         availablePrograms = new ArrayList<>();
         fetchSchools();

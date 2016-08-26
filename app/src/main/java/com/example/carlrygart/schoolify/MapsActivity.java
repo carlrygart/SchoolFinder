@@ -20,11 +20,9 @@ import java.util.concurrent.ExecutionException;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private final static String LOG_TAG = "MAPS";
+    private final static String LOG_TAG = "MAPSACTIVITY";
     private GoogleMap mMap;
-//    private LatLng schoolCoordinates;
     private School school;
-//    private LocationDAO locationDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +35,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Intent intent = getIntent();
         school = Schoolify.getSchoolByName(intent.getStringExtra("school_name"));
-//        locationDAO = new LocationDAO();
-//        locationDAO.execute(school.getAddress() + ", " + school.getPostalCode());
-//        try {
-//            double[] locationData = locationDAO.get();
-//            if (locationData!=null) {
-//                schoolCoordinates = new LatLng(locationData[0], locationData[1]);
-//            } else {
-//                schoolCoordinates = new LatLng(0, 0);
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
 

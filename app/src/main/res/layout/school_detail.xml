@@ -1,21 +1,151 @@
-<LinearLayout
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:columnCount="3"
+    android:rowCount="7"
     tools:context="com.example.carlrygart.schoolify.SchoolDetailFragment">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/school_address" />
+        android:id="@+id/title_icon"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:src="@android:drawable/ic_menu_info_details"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:id="@+id/school_facebook" />
-</LinearLayout>
+        android:id="@+id/school_title"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/programs_icon"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_programs"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/website_icon"
+        android:layout_row="2"
+        android:layout_column="0"
+        android:src="@drawable/ic_public_black_24dp"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_website"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_icon"
+        android:layout_row="3"
+        android:layout_column="0"
+        android:src="@android:drawable/ic_menu_call"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_phone"
+        android:layout_row="3"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/email_icon"
+        android:layout_row="4"
+        android:layout_column="0"
+        android:src="@android:drawable/ic_dialog_email"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_email"
+        android:layout_row="4"
+        android:layout_column="1"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/facebook_icon"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:src="@mipmap/ic_facebook"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_facebook"
+        android:layout_row="5"
+        android:layout_column="1"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/text_margin" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location_icon"
+        android:layout_row="6"
+        android:layout_column="0"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/school_address"
+        android:layout_row="6"
+        android:layout_column="1"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/text_margin" />
+
+</GridLayout>

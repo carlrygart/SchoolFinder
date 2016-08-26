@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
@@ -34,15 +32,6 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
     protected ArrayList<School> doInBackground(Void... params) {
         try {
             final String BASE_ADDR = "http://api.skanegy.se/get/schools/";
-//            final String KEY_PARAM = "resource_id";
-//            final String KEY_VALUE = "de6fbf16-9e05-495d-9371-8b706bba5be2";
-//            final String LIMIT_PARAM = "limit";
-//            final String LIMIT_VALUE = "60";
-//
-//            Uri builtUri = Uri.parse(BASE_ADDR).buildUpon()
-//                    .appendQueryParameter(KEY_PARAM, KEY_VALUE)
-//                    .appendQueryParameter(LIMIT_PARAM, LIMIT_VALUE)
-//                    .build();
 
             URL url = new URL(BASE_ADDR);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -73,8 +62,6 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             JsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Exception ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } finally {
             if (urlConnection != null) {
@@ -89,18 +76,15 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             }
         }
         try {
-            //Log.d(LOG_TAG, "Ready to parse!");
-            return getSchoolDataFromJson(JsonStr);
+            return getSchoolsFromJson(JsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
-        // This will only happen if there was an error getting or parsing the forecast.
         return null;
     }
 
-    private ArrayList<School> getSchoolDataFromJson(String JsonStr)
+    private ArrayList<School> getSchoolsFromJson(String JsonStr)
             throws JSONException {
         Log.d(LOG_TAG, JsonStr);
         limit = 0;
@@ -158,8 +142,6 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             JsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Exception ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } finally {
             if (urlConnection != null) {
@@ -180,8 +162,6 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
-        // This will only happen if there was an error getting or parsing the forecast.
         return null;
     }
 
@@ -205,14 +185,14 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
         String email = resultObject.getString("email");
         String website = resultObject.getString("website");
         String facebook = (resultObject.getString("socialMediaType").equals("facebook")) ? resultObject.getString("socialMediaLink") : null;
-        LatLng location = new LatLng(55.6, 13.0); //getLatLngFromAddress(address + ", " + postalCode);
+        LatLng location = getLatLngFromAddress(address + ", " + postalCode); // new LatLng(55.6, 13.0);
         List<String> offeredPrograms = new ArrayList<>();
         for (int i = 0; i < programsArray.length(); ++i) {
             String program = programsArray.getJSONObject(i).getString("name");
             if (!offeredPrograms.contains(program)) offeredPrograms.add(program);
             if (!Schoolify.availablePrograms.contains(program)) Schoolify.availablePrograms.add(program);
         }
-        return new School(id, name, address, postalCode, city, phone, email, website, facebook, location, offeredPrograms);
+        return new School(id, name, address, postalCode, city, website, phone, email, facebook, location, offeredPrograms);
     }
 
     public LatLng getLatLngFromAddress(String address) {
@@ -220,26 +200,21 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
         final String ADDRESS_PARAM = "query";
         final String KEY_PARAM = "key";
         final String KEY_VALUE = "AIzaSyAZSKPTTrRyl7NT7HUsQcMYb5AzTC-Q-h4";
-        //Log.d(LOG_TAG, address);
         Uri builtUri = Uri.parse(BASE_ADDR).buildUpon()
                 .appendQueryParameter(ADDRESS_PARAM, address)
                 .appendQueryParameter(KEY_PARAM, KEY_VALUE)
                 .build();
-        //Log.d(LOG_TAG,builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
-            //Log.d("TVA2", "tom");
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            //Log.d("TRE3", urlConnection.toString());
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
-            //Log.d("FYR4", inputStream.toString());
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
@@ -262,8 +237,6 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             JsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } finally {
             if (urlConnection != null) {
@@ -278,42 +251,37 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             }
         }
         try {
-//            Log.d(LOG_TAG,"Ready to parse!");
-            return parseStream(JsonStr);
+            return getLatLngFromJson(JsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
-        // This will only happen if there was an error getting or parsing the forecast.
         return null;
     }
 
-    private LatLng parseStream(String JsonStr) throws JSONException {
+    private LatLng getLatLngFromJson(String JsonStr) throws JSONException {
         //Log.d(LOG_TAG, JsonStr);
         // These are the names of the JSON objects that need to be extracted.
-        final String OWM_RESULTS = "results";
-        final String OWM_GEOMETRY = "geometry";
-        final String OWM_LOCATION = "location";
-        final String OWM_STATUS = "status";
+        final String RESULTS = "results";
+        final String GEOMETRY = "geometry";
+        final String LOCATION = "location";
 
         JSONObject locationJson = new JSONObject(JsonStr);
         if (locationJson.getString("status").equals("OK")) {
-            JSONArray locationArray = locationJson.getJSONArray(OWM_RESULTS);
+            JSONArray locationArray = locationJson.getJSONArray(RESULTS);
 
             double[] result = new double[2];
             JSONObject Object = locationArray.getJSONObject(0);
-            JSONObject geometry = Object.getJSONObject(OWM_GEOMETRY);
-            JSONObject locationObject = geometry.getJSONObject(OWM_LOCATION);
+            JSONObject geometry = Object.getJSONObject(GEOMETRY);
+            JSONObject locationObject = geometry.getJSONObject(LOCATION);
             result[0] = locationObject.getDouble("lat");
             result[1] = locationObject.getDouble("lng");
             Log.d(LOG_TAG, "Location is " + result[0] + ", " + result[1]);
             Log.d(LOG_TAG, "-----------------------");
             return new LatLng(result[0], result[1]);
         } else {
-            Log.d(LOG_TAG, "In else:Status is " + locationJson.getString("status"));
+            Log.d(LOG_TAG, "In else: Status is " + locationJson.getString("status"));
             return null;
         }
     }
-
 }

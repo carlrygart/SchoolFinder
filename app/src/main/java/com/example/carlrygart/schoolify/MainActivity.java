@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity
 
         // Spinner stuff. Fetching the resources and find the array with choices. Creates the
         // spinner object and the adapter. Finally putting the adapter in the spinner object.
-        //Resources res = getResources();
-        //String[] numberedList = res.getStringArray(R.array.number_list);
         spinner = (Spinner) findViewById(R.id.spinner);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schoolify.getSchoolStringArray());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -81,10 +79,9 @@ public class MainActivity extends AppCompatActivity
         submitSpinnerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 String spinnerValue = spinner.getSelectedItem().toString();
-                intent.putExtra("school_name", spinnerValue);
-                //Log.d("Int", key_string + " and Val: " + playerScores.get(key_int));
+                Intent intent = new Intent(MainActivity.this, SchoolDetailActivity.class);
+                intent.putExtra(SchoolDetailFragment.ARG_ITEM_ID, spinnerValue);
                 startActivity(intent);
             }
         });

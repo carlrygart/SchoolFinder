@@ -22,10 +22,14 @@
             <ImageView
                 android:id="@+id/filter_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
+                android:layout_height="?attr/actionBarSize"
                 android:src="@drawable/ic_setting_dark"
-                android:layout_gravity="top|end" />
+                android:layout_gravity="top|end"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:forceHasOverlappingRendering="false"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
 
         </android.support.v7.widget.Toolbar>
 
