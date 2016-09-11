@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayAdapter<String> adapter;
 
     // Used for fetching the current location.
-    public static GoogleApiClient mGoogleApiClient;
-    public static Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private static Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,5 +159,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(LOG_TAG, "Connection of GoogleApiClient failed!");
+    }
+
+    public static Location getLastLocation() {
+        return mLastLocation;
     }
 }

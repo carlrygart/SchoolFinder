@@ -152,7 +152,7 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         // Check if the school offers at least one program of the chosen and if it's within distance.
         schoolsToView = new ArrayList<>();
         for (School school: Schoolify.getSchools()) {
-            if (school.hasOneOfPrograms(selectedPrograms) && (school.isWithinDistance(MainActivity.mLastLocation, chosenDistance) || chosenDistance == 20)) schoolsToView.add(school);
+            if (school.hasOneOfPrograms(selectedPrograms) && (school.isWithinDistance(MainActivity.getLastLocation(), chosenDistance) || chosenDistance == 20)) schoolsToView.add(school);
         }
 
         // Sets adapter and updates the map with new pins.
@@ -197,7 +197,7 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
             holder.mSchoolNameView.setText(holder.mSchool.getName());
 
             // Fetches the latest known location, the schools location, calculates and print out the distance.
-            Location userLoc = MainActivity.mLastLocation;
+            Location userLoc = MainActivity.getLastLocation();
             LatLng schoolLoc = holder.mSchool.getLocation();
             double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), schoolLoc.latitude, schoolLoc.longitude);
             String distanceText = String.format("%.2f km från din position", distance);

@@ -146,7 +146,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
      * @param address String describing the address of the school, e.g. Skolgatan 3, Stockholm.
      * @return The location of the entered address in a LatLng object.
      */
-    public LatLng getLatLngFromAddress(String address) {
+    private LatLng getLatLngFromAddress(String address) {
 
         // Prepare and build the URL string.
         final String BASE_ADDR = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
