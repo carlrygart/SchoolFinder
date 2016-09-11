@@ -1,12 +1,14 @@
 package com.example.carlrygart.schoolify;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+/**
+ * Entity class representing the object school. Keeps all necessary information about the school.
+ */
 public class School {
 
     private int id;
@@ -21,7 +23,9 @@ public class School {
     private LatLng location;
     private List<String> programs;
 
-    public School(int id, String name, String address, String postalCode, String city, String webSite, String phone, String email, String facebook, LatLng location, List<String> programs) {
+    public School(int id, String name, String address, String postalCode, String city,
+                  String webSite, String phone, String email, String facebook,
+                  LatLng location, List<String> programs) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -39,90 +43,51 @@ public class School {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getPostalCode() {
         return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getWebSite() {
         return webSite;
-    }
-
-    public void setWebSite(String webSite) {
-        this.webSite = webSite;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFacebook() {
         return facebook;
     }
 
-    public void setFacebook(String facebook) {
-        this.facebook = facebook;
-    }
-
     public LatLng getLocation() {
         return location;
-    }
-
-    public void setLocation(LatLng location) {
-        this.location = location;
     }
 
     public List<String> getPrograms() {
         return programs;
     }
 
-    public void setPrograms(List<String> programs) {
-        this.programs = programs;
-    }
-
+    /**
+     * Method for checking if the school is offering one of a list of programs.
+     * @param chosenPrograms List of programs.
+     * @return True or false depending on result of check.
+     */
     public boolean hasOneOfPrograms(List<String> chosenPrograms) {
         for (String pro: chosenPrograms) {
             if (programs.contains(pro)) return true;
@@ -130,12 +95,19 @@ public class School {
         return false;
     }
 
-    public boolean isWithinDistance(int acceptableDistance) {
-        Location userLoc = MainActivity.mLastLocation;
-        double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), location.latitude, location.longitude, "K");
+    /**
+     * Method for checking whether a school are within distance of chosen distance for the
+     * provided user location.
+     * @param userLoc The current location of the user.
+     * @param acceptableDistance The chosen distance.
+     * @return True or false depending on result of check.
+     */
+    public boolean isWithinDistance(Location userLoc, int acceptableDistance) {
+        double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(),
+                location.latitude, location.longitude);
         //Log.d("ACCDISTANCE", String.valueOf(acceptableDistance));
         //Log.d("ACTUALDISTANCE", String.valueOf(distance));
-        if (distance < acceptableDistance) return true;
-        return false;
+        if (distance > acceptableDistance) return false;
+        return true;
     }
 }

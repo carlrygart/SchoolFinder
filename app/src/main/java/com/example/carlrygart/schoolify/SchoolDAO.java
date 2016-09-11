@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
-    private String LOG_TAG = "SCHOOLDAO";
+    private final static String LOG_TAG = "SCHOOLDAO";
 
     /**
      * Asynchronous HTTP GET request for fetching the list of schools. The method is divided in
@@ -40,16 +40,22 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
      * gets parsed with JSON and the list of school is created.
      * The method is calling getLatLngFromAddress for each school entry to fetch the right
      * school information.
-     * @param params
-     * @return a list of schools
+     * @return A list of schools
      */
     protected ArrayList<School> doInBackground(Void... params) {
+
+        // Adjust to fetch wanted number of schools.
+        int maxNumberOfSchools = 10;
 
         // Prepare and build the URL string.
         final String BASE_ADDR = "http://api.skanegy.se/get/schools/";
 
         // Make the HTTP request.
         String schoolListJsonStr = makeHTTPRequest(BASE_ADDR);
+        if (schoolListJsonStr == null) {
+            Log.d(LOG_TAG, "HTTP Error - Problem getting list of schools. You need a working network connection.");
+            return null;
+        }
 
         // Create the JSON object, checks if the request was successful, and in that case
         // extracts the requested information.
@@ -69,7 +75,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
                     listOfSchools.add(school);
                     limit++;
                 }
-                if (limit == 3) return listOfSchools;
+                if (limit == maxNumberOfSchools) return listOfSchools;
             }
             Log.d(LOG_TAG, "Size of school array is " + listOfSchools.size());
             return listOfSchools;
@@ -95,6 +101,10 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
         // Make the HTTP request.
         String schoolSpecJsonStr = makeHTTPRequest(BASE_ADDR);
+        if (schoolSpecJsonStr == null) {
+            Log.d(LOG_TAG, "HTTP Error - Problem getting school: "+ schoolId +". You need a working network connection.");
+            return null;
+        }
 
         // Create the JSON object, checks if the request was successful, and in that case
         // extracts the requested information.
@@ -119,7 +129,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             for (int i = 0; i < programsArray.length(); ++i) {
                 String program = programsArray.getJSONObject(i).getString("name");
                 if (!offeredPrograms.contains(program)) offeredPrograms.add(program);
-                if (!Schoolify.availablePrograms.contains(program)) Schoolify.availablePrograms.add(program);
+                if (!Schoolify.getAvailablePrograms().contains(program)) Schoolify.addProgramToAvailablePrograms(program);
             }
             return new School(id, name, address, postalCode, city, website, phone, email, facebook, location, offeredPrograms);
         } catch (JSONException e) {
@@ -150,6 +160,10 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
         // Make the HTTP request.
         String locationJsonStr = makeHTTPRequest(builtUri.toString());
+        if (locationJsonStr == null) {
+            Log.d(LOG_TAG, "HTTP Error - Problem getting location: "+ address +". You need a working network connection.");
+            return null;
+        }
 
         // Create the JSON object, checks if the request was successful, and in that case
         // extracts the requested information.
@@ -220,7 +234,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
 
             // Return resulting JSON string.
             return buffer.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "Some error in the HTTP request", e);
             return null;
         } finally {

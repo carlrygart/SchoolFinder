@@ -2,10 +2,6 @@ package com.example.carlrygart.schoolify;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,34 +9,40 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.vision.text.Text;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Fragment class managing the filter dialog, where the user can choose programs and
+ * distance to schools.
+ */
 public class FilterDialogFragment extends DialogFragment {
 
-    public static String LOG_TAG = "DIALOGFRAG";
+    public static final String LOG_TAG = "DIALOGFRAG";
 
     protected List<String> selectedPrograms;
     protected int chosenDistance;
 
+    /**
+     * Interface managing the listener used when the user closes the dialog. SchoolListActivity is
+     * implementing this interface.
+     */
     public interface FilterDialogListener {
         void onFinishDialog(List<String> selectedPrograms, int chosenDistance);
     }
 
+    /**
+     * Used instead of constructor to be able to use arguments with the dialog.
+     * @param selectedPrograms List of the last known selected programs.
+     * @param chosenDistance Integer of the last known distance chosen.
+     * @return The fragment object.
+     */
     public static FilterDialogFragment newInstance(List<String> selectedPrograms, int chosenDistance) {
         FilterDialogFragment frag = new FilterDialogFragment();
         Bundle args = new Bundle();
@@ -50,25 +52,30 @@ public class FilterDialogFragment extends DialogFragment {
         return frag;
     }
 
-    /** The system calls this to get the DialogFragment's layout, regardless
-     of whether it's being displayed as a dialog or an embedded fragment. */
+    /**
+     * The system calls this to get the DialogFragment's layout, regardless
+     * of whether it's being displayed as a dialog or an embedded fragment.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout to use as dialog or embedded fragment
         final View view = inflater.inflate(R.layout.filter_dialog_content, container, false);
 
+        // Get the argument parameters.
         selectedPrograms = getArguments().getStringArrayList("selectedPrograms");
-        Log.d(LOG_TAG, String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
         chosenDistance = getArguments().getInt("chosenDistance");
+        Log.d(LOG_TAG, String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
 
+        // Sets the chosen distance text to TextView and the SeekBar.
         final TextView maxDistanceValue = (TextView) view.findViewById(R.id.max_distance_value);
         String distText = chosenDistance + " km";
         if (chosenDistance == 20) distText = ">20 km";
         maxDistanceValue.setText(distText);
+
+        // Sets chosen distance to SeekBar and adds a on change listener.
         SeekBar maxDistance = (SeekBar) view.findViewById(R.id.max_distance_seek_bar);
         maxDistance.setProgress(chosenDistance);
-
         maxDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -90,9 +97,11 @@ public class FilterDialogFragment extends DialogFragment {
             }
         });
 
+        // Sets the recycler view with the offered programs.
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.program_list);
         setupRecyclerView(recyclerView);
 
+        // Adds a listener to the OK-button.
         Button okButton = (Button) view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +112,7 @@ public class FilterDialogFragment extends DialogFragment {
             }
         });
 
+        // Adds listener to Cancel-button.
         Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,44 +124,56 @@ public class FilterDialogFragment extends DialogFragment {
         return view;
     }
 
-    /** The system calls this only when creating the layout in a dialog. */
+    /**
+     * The system calls this when creating the layout in a dialog. Adds the title to the dialog.
+     * */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // The only reason you might override this method when using onCreateView() is
-        // to modify any dialog characteristics. For example, the dialog includes a
-        // title by default, but your custom layout might not need it. So here you can
-        // remove the dialog title, but you must call the superclass to get the Dialog.
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setTitle("Filter");
         return dialog;
     }
 
+    /**
+     * Sets up the recycler view.
+     * @param recyclerView The view to be filled.
+     */
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Schoolify.availablePrograms));
+        recyclerView.setAdapter(new SimpleProgramRecyclerViewAdapter(Schoolify.getAvailablePrograms()));
     }
 
-    public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    /**
+     * Class used for binding the items (program represented as a String) to
+     * holders in the RecyclerView.
+     */
+    public class SimpleProgramRecyclerViewAdapter
+            extends RecyclerView.Adapter<SimpleProgramRecyclerViewAdapter.ProgramViewHolder> {
 
         private final List<String> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<String> items) {
+        public SimpleProgramRecyclerViewAdapter(List<String> items) {
             mValues = items;
         }
 
+        /**
+         * Inflates the right layout.
+         */
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ProgramViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.program_list_content, parent, false);
-            return new ViewHolder(view);
+            return new ProgramViewHolder(view);
         }
 
+        /**
+         * Method setting up the features for each holder in the school list.
+         */
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mProgramNameView.setText(holder.mItem);
+        public void onBindViewHolder(final ProgramViewHolder holder, int position) {
+            holder.mProgramName = mValues.get(position);
+            holder.mProgramNameView.setText(holder.mProgramName);
 
+            // Set listener for when the users press the holder.
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -163,28 +185,35 @@ public class FilterDialogFragment extends DialogFragment {
                 }
             });
 
+            // Set listener for select or deselect the checkbox in the holder.
+            // If the selected program is not in the selected programs list, it will get added.
+            // If the selected programs list already contain the selected program, it will not
+            // be added again.
             holder.mProgramNameView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b && !selectedPrograms.contains(holder.mItem)) {
-                        selectedPrograms.add(holder.mItem);
-                        Log.d("ADDED:", holder.mItem);
+                    if (b && !selectedPrograms.contains(holder.mProgramName)) {
+                        selectedPrograms.add(holder.mProgramName);
+                        Log.d("ADDED:", holder.mProgramName);
                     }
                     if (!b) {
-                        selectedPrograms.remove(holder.mItem);
-                        Log.d("REMOVED:", holder.mItem);
+                        selectedPrograms.remove(holder.mProgramName);
+                        Log.d("REMOVED:", holder.mProgramName);
                     }
                     Log.d(LOG_TAG, String.valueOf(selectedPrograms.size()) + " - " + selectedPrograms.toString());
                     Log.d(LOG_TAG, "-------------------------");
                 }
             });
 
-            if (selectedPrograms.contains(holder.mItem)) {
+            // Checks if the program name is in the list of selected programs, and in that case
+            // sets the checkbox to true. This code is needed because the holder is bind again,
+            // every time it is viewed in the scroll list.
+            if (selectedPrograms.contains(holder.mProgramName)) {
                 holder.mProgramNameView.setChecked(true);
-                Log.d(LOG_TAG, "Checked: " + holder.mItem);
+                Log.d(LOG_TAG, "Checked: " + holder.mProgramName);
             } else {
                 holder.mProgramNameView.setChecked(false);
-                Log.d(LOG_TAG, "NOT Checked: " + holder.mItem);
+                Log.d(LOG_TAG, "NOT Checked: " + holder.mProgramName);
             }
         }
 
@@ -193,12 +222,15 @@ public class FilterDialogFragment extends DialogFragment {
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * Nested class for each program in the RecyclerView.
+         */
+        public class ProgramViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
+            public String mProgramName;
             public final CheckBox mProgramNameView;
-            public String mItem;
 
-            public ViewHolder(View view) {
+            public ProgramViewHolder(View view) {
                 super(view);
                 mView = view;
                 mProgramNameView = (CheckBox) view.findViewById(R.id.program_name);
