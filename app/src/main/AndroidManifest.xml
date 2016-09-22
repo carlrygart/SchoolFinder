@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.carlrygart.schoolify">
+    package="com.example.carlrygart.schoolfinder">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -9,12 +9,12 @@
 
     <application
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:icon="@mipmap/schoolify_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.carlrygart.schoolfinder.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,25 +24,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapsActivity"
+            android:name="com.example.carlrygart.schoolfinder.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".SchoolListActivity"
+            android:name="com.example.carlrygart.schoolfinder.SchoolListActivity"
             android:label="@string/title_school_list"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.carlrygart.schoolfinder.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.carlrygart.schoolify.MainActivity" />
+                android:value="com.example.carlrygart.schoolfinder.MainActivity" />
         </activity>
         <activity
-            android:name=".SchoolDetailActivity"
+            android:name="com.example.carlrygart.schoolfinder.SchoolDetailActivity"
             android:label="@string/title_school_detail"
-            android:parentActivityName=".SchoolListActivity"
+            android:parentActivityName="com.example.carlrygart.schoolfinder.SchoolListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.carlrygart.schoolify.SchoolListActivity" />
+                android:value="com.example.carlrygart.schoolfinder.SchoolListActivity" />
         </activity>
 
         <meta-data

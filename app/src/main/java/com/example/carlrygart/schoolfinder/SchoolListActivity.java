@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.app.DialogFragment;
 import android.content.Context;
@@ -75,11 +75,11 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
         if (savedInstanceState != null) {
             chosenDistance = savedInstanceState.getInt("chosenDistance");
             selectedPrograms = savedInstanceState.getStringArrayList("selectedPrograms");
-            Log.d(LOG_TAG, "Restored state - Chosen distance: " + chosenDistance +
+             if (selectedPrograms != null) Log.d(LOG_TAG, "Restored state - Chosen distance: " + chosenDistance +
                     " and size of selected programs: " + selectedPrograms.size());
         } else {
             chosenDistance = 20;
-            selectedPrograms = new ArrayList<>(Schoolify.getAvailablePrograms());
+            selectedPrograms = new ArrayList<>(SchoolFinder.getAvailablePrograms());
             Log.d(LOG_TAG, "Default config for recycler view.");
         }
         updateRecyclerViewAndMap();
@@ -151,7 +151,7 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
     private void updateRecyclerViewAndMap() {
         // Check if the school offers at least one program of the chosen and if it's within distance.
         schoolsToView = new ArrayList<>();
-        for (School school: Schoolify.getSchools()) {
+        for (School school: SchoolFinder.getSchools()) {
             if (school.hasOneOfPrograms(selectedPrograms) && (school.isWithinDistance(MainActivity.getLastLocation(), chosenDistance) || chosenDistance == 20)) schoolsToView.add(school);
         }
 
@@ -198,9 +198,14 @@ public class SchoolListActivity extends AppCompatActivity implements OnMapReadyC
 
             // Fetches the latest known location, the schools location, calculates and print out the distance.
             Location userLoc = MainActivity.getLastLocation();
-            LatLng schoolLoc = holder.mSchool.getLocation();
-            double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), schoolLoc.latitude, schoolLoc.longitude);
-            String distanceText = String.format("%.2f km från din position", distance);
+            String distanceText;
+            if (userLoc != null) {
+                LatLng schoolLoc = holder.mSchool.getLocation();
+                double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(), schoolLoc.latitude, schoolLoc.longitude);
+                distanceText = String.format("%.2f km från din position", distance);
+            } else {
+                distanceText = "Kan ej bestämma din plats.";
+            }
             holder.mDistance.setText(distanceText);
 
             // Sets listener for if the user clicks on the holder.

@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -38,7 +38,7 @@ public class SchoolDetailFragment extends Fragment {
             Activity activity = this.getActivity();
 
             // Fetch the school object from the model.
-            mSchool = Schoolify.getSchoolByName(getArguments().getString(ARG_SCHOOL_NAME));
+            mSchool = SchoolFinder.getSchoolByName(getArguments().getString(ARG_SCHOOL_NAME));
 
             // Add the school's name to the title.
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

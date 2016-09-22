@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.example.carlrygart.schoolify"
+        applicationId "com.example.carlrygart.schoolfinder"
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1

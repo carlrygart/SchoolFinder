@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

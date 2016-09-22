@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.location.Location;
 
@@ -103,6 +103,7 @@ public class School {
      * @return True or false depending on result of check.
      */
     public boolean isWithinDistance(Location userLoc, int acceptableDistance) {
+        if (userLoc == null) return true;
         double distance = DistanceCalculator.calc(userLoc.getLatitude(), userLoc.getLongitude(),
                 location.latitude, location.longitude);
         //Log.d("ACCDISTANCE", String.valueOf(acceptableDistance));

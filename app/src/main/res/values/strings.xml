@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Schoolify</string>
+    <string name="app_name">SchoolFinder</string>
 
-    <string name="action_about">Om Schoolify</string>
+    <string name="action_about">Om SchoolFinder</string>
 
     <string name="find_schools_button">Gå till Gymnasieväljaren</string>
     <string name="or_choose_from_list">Eller välj direkt från listan</string>
@@ -24,5 +24,5 @@
     <string name="ok">OK</string>
     <string name="close">Stäng</string>
 
-    <string name="about_schoolify_info">Schoolify är en applikation till Android som syftar till att underlätta valet av gymnasium för undomar i Malmö.\n\nSchoolify använder din platsinformation (GPS) för att hjälpa dig hitta skolor som är nära din position. Dock sparas ingen av denna eller någon annan information, så du kan känna dig helt säker med Schoolify.\n\nLycka till i sökandet av skolor!</string>
+    <string name="about_schoolfinder_info">SchoolFinder är en applikation till Android som syftar till att underlätta valet av gymnasium för undomar i Malmö.\n\nSchoolFinder använder din platsinformation (GPS) för att hjälpa dig hitta skolor som är nära din position. Dock sparas ingen av denna eller någon annan information, så du kan känna dig helt säker med SchoolFinder.\n\nLycka till i sökandet av skolor!</string>
 </resources>

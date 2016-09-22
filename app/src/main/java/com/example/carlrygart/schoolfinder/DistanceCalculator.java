@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 /**
  * Class to calculate the distance in km between two coordinates in latitude and longitude format.

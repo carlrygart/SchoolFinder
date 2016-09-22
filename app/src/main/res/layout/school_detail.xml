@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:columnCount="3"
     android:rowCount="7"
-    tools:context="com.example.carlrygart.schoolify.SchoolDetailFragment">
+    tools:context="com.example.carlrygart.schoolfinder.SchoolDetailFragment">
 
     <ImageView
         android:layout_width="wrap_content"

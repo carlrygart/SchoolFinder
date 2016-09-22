@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 /**
- * Main activity class that initiates the application Schoolify and is the first thing to show
+ * Main activity class that initiates the application SchoolFinder and is the first thing to show
  * when starting the application.
  */
 public class MainActivity extends AppCompatActivity
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     public static String LOG_TAG = "MAINACTIVITY";
 
     // The model.
-    private Schoolify schoolify;
+    private SchoolFinder schoolfinder;
 
     // This activity's view.
     private Spinner spinner;
@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity
                     .build();
         }
 
-        // Create an instance of the model Schoolify.
-        schoolify = new Schoolify();
+        // Create an instance of the model SchoolFinder.
+        schoolfinder = new SchoolFinder();
 
         // Spinner code. Fetching the array with schools. Creates the
         // spinner object and the adapter. Finally putting the adapter in the spinner object.
         spinner = (Spinner) findViewById(R.id.spinner);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schoolify.getSchoolStringList());
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schoolfinder.getSchoolStringList());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Inflates the menu containing e.g. "Om Schoolify".
+     * Inflates the menu containing e.g. "Om SchoolFinder".
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // Handles click on the menu choice "Om Schoolify".
+        // Handles click on the menu choice "Om SchoolFinder".
         if (id == R.id.action_about) {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Om Schoolify");
-            alertDialog.setMessage(getResources().getString(R.string.about_schoolify_info));
+            alertDialog.setTitle("Om SchoolFinder");
+            alertDialog.setMessage(getResources().getString(R.string.about_schoolfinder_info));
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.close),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

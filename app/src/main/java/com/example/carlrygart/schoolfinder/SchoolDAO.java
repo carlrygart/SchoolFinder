@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -129,7 +129,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             for (int i = 0; i < programsArray.length(); ++i) {
                 String program = programsArray.getJSONObject(i).getString("name");
                 if (!offeredPrograms.contains(program)) offeredPrograms.add(program);
-                if (!Schoolify.getAvailablePrograms().contains(program)) Schoolify.addProgramToAvailablePrograms(program);
+                if (!SchoolFinder.getAvailablePrograms().contains(program)) SchoolFinder.addProgramToAvailablePrograms(program);
             }
             return new School(id, name, address, postalCode, city, website, phone, email, facebook, location, offeredPrograms);
         } catch (JSONException e) {
@@ -218,7 +218,7 @@ public class SchoolDAO extends AsyncTask<Void, Void, ArrayList<School>> {
             }
 
             // Read the input stream into a string.
-            InputStream inputStream = urlConnection.getInputStream();
+            InputStream inputStream = urlConnection != null ? urlConnection.getInputStream() : null;
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 return null;

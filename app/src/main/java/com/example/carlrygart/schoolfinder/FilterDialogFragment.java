@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -139,7 +139,7 @@ public class FilterDialogFragment extends DialogFragment {
      * @param recyclerView The view to be filled.
      */
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleProgramRecyclerViewAdapter(Schoolify.getAvailablePrograms()));
+        recyclerView.setAdapter(new SimpleProgramRecyclerViewAdapter(SchoolFinder.getAvailablePrograms()));
     }
 
     /**

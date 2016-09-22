@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.Manifest;
 import android.content.Intent;
@@ -35,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Fetch the school object from the model for showing the right text in the marker text.
         Intent intent = getIntent();
-        school = Schoolify.getSchoolByName(intent.getStringExtra("school_name"));
+        school = SchoolFinder.getSchoolByName(intent.getStringExtra("school_name"));
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.carlrygart.schoolify;
+package com.example.carlrygart.schoolfinder;
 
 import android.util.Log;
 
@@ -7,18 +7,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Schoolify is the main model class in the application. When created, it will fetch the latest
+ * SchoolFinder is the main model class in the application. When created, it will fetch the latest
  * schools by using the SchoolDAO object.
  */
-public class Schoolify {
+public class SchoolFinder {
 
-    private final static String LOG_TAG = "SCHOOLIFY";
+    private final static String LOG_TAG = "SCHOOLFINDER";
 
     private SchoolDAO schoolDAO;
     private static List<School> schools;
     private static List<String> availablePrograms;
 
-    public Schoolify() {
+    public SchoolFinder() {
         schoolDAO = new SchoolDAO();
         fetchSchools();
     }
